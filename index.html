@@ -2372,6 +2372,700 @@
                 padding: 30px;
             }
         }
+
+        /* ========== CHATBOT STYLES ========== */
+        .chatbot-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 5000;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Chat Toggle Button */
+        .chat-toggle {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background: var(--gradient-2);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 30px rgba(243, 156, 18, 0.4);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chat-toggle::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .chat-toggle:hover::before {
+            opacity: 1;
+        }
+
+        .chat-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 40px rgba(243, 156, 18, 0.5);
+        }
+
+        .chat-toggle-icon,
+        .chat-toggle-close {
+            position: absolute;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .chat-toggle-close {
+            opacity: 0;
+            transform: rotate(-90deg) scale(0);
+        }
+
+        .chat-toggle.active .chat-toggle-icon {
+            opacity: 0;
+            transform: rotate(90deg) scale(0);
+        }
+
+        .chat-toggle.active .chat-toggle-close {
+            opacity: 1;
+            transform: rotate(0) scale(1);
+        }
+
+        .chat-notification {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 24px;
+            height: 24px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: notificationPulse 2s infinite;
+            border: 3px solid white;
+        }
+
+        .chat-notification.hidden {
+            display: none;
+        }
+
+        @keyframes notificationPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Chat Window */
+        .chat-window {
+            position: absolute;
+            bottom: 85px;
+            right: 0;
+            width: 400px;
+            height: 600px;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px) scale(0.95);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.dark-mode .chat-window {
+            background: var(--dark-2);
+        }
+
+        .chat-window.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+
+        /* Chat Header */
+        .chat-header {
+            background: var(--gradient-1);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: white;
+        }
+
+        .chat-header-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .chat-avatar {
+            position: relative;
+            width: 50px;
+            height: 50px;
+        }
+
+        .chat-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid rgba(255,255,255,0.3);
+        }
+
+        .online-status {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 12px;
+            height: 12px;
+            background: #27ae60;
+            border-radius: 50%;
+            border: 2px solid white;
+            animation: onlinePulse 2s infinite;
+        }
+
+        @keyframes onlinePulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.4); }
+            50% { box-shadow: 0 0 0 6px rgba(39, 174, 96, 0); }
+        }
+
+        .chat-header-text h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .chat-status {
+            font-size: 0.8rem;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .chat-status i {
+            font-size: 0.5rem;
+            color: #27ae60;
+        }
+
+        .chat-header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chat-action-btn {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chat-action-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Chat Messages */
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: var(--light);
+        }
+
+        body.dark-mode .chat-messages {
+            background: var(--dark);
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(0,0,0,0.2);
+            border-radius: 3px;
+        }
+
+        /* Welcome Message */
+        .chat-welcome {
+            text-align: center;
+            padding: 30px 20px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+
+        body.dark-mode .chat-welcome {
+            background: var(--dark-2);
+        }
+
+        .welcome-avatar {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+
+        .welcome-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--secondary);
+        }
+
+        .welcome-avatar::after {
+            content: '🌟';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            font-size: 1.5rem;
+        }
+
+        .chat-welcome h3 {
+            font-size: 1.5rem;
+            color: var(--dark);
+            margin-bottom: 10px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        body.dark-mode .chat-welcome h3 {
+            color: white;
+        }
+
+        .chat-welcome p {
+            color: var(--gray);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Message Bubbles */
+        .message {
+            display: flex;
+            gap: 12px;
+            max-width: 85%;
+            animation: messageSlide 0.3s ease;
+        }
+
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.bot {
+            align-self: flex-start;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .message-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .message-content {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .message-bubble {
+            padding: 14px 18px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            position: relative;
+        }
+
+        .message.bot .message-bubble {
+            background: white;
+            color: var(--dark);
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+        }
+
+        body.dark-mode .message.bot .message-bubble {
+            background: var(--dark-2);
+            color: white;
+        }
+
+        .message.user .message-bubble {
+            background: var(--gradient-1);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            color: var(--gray);
+            padding: 0 5px;
+        }
+
+        .message.user .message-time {
+            text-align: right;
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: flex;
+            gap: 12px;
+            align-self: flex-start;
+            max-width: 85%;
+        }
+
+        .typing-bubble {
+            background: white;
+            padding: 18px 22px;
+            border-radius: 20px;
+            border-bottom-left-radius: 5px;
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+        }
+
+        body.dark-mode .typing-bubble {
+            background: var(--dark-2);
+        }
+
+        .typing-bubble span {
+            width: 8px;
+            height: 8px;
+            background: var(--gray);
+            border-radius: 50%;
+            animation: typingBounce 1.4s infinite ease-in-out;
+        }
+
+        .typing-bubble span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-bubble span:nth-child(2) { animation-delay: -0.16s; }
+        .typing-bubble span:nth-child(3) { animation-delay: 0s; }
+
+        @keyframes typingBounce {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Quick Replies */
+        .quick-replies {
+            padding: 10px 20px 15px;
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            background: var(--light);
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+
+        body.dark-mode .quick-replies {
+            background: var(--dark);
+            border-color: rgba(255,255,255,0.1);
+        }
+
+        .quick-replies::-webkit-scrollbar {
+            display: none;
+        }
+
+        .quick-reply-btn {
+            flex-shrink: 0;
+            padding: 10px 18px;
+            border: 2px solid var(--primary);
+            background: white;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        body.dark-mode .quick-reply-btn {
+            background: var(--dark-2);
+            border-color: var(--secondary);
+            color: var(--secondary);
+        }
+
+        .quick-reply-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        body.dark-mode .quick-reply-btn:hover {
+            background: var(--secondary);
+            color: var(--dark);
+        }
+
+        /* Chat Input */
+        .chat-input-container {
+            padding: 15px 20px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            background: white;
+            border-top: 1px solid rgba(0,0,0,0.08);
+        }
+
+        body.dark-mode .chat-input-container {
+            background: var(--dark-2);
+            border-color: rgba(255,255,255,0.1);
+        }
+
+        .chat-input-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--light);
+            border-radius: 25px;
+            padding: 5px 15px;
+            border: 2px solid transparent;
+            transition: border-color 0.3s ease;
+        }
+
+        body.dark-mode .chat-input-wrapper {
+            background: var(--dark);
+        }
+
+        .chat-input-wrapper:focus-within {
+            border-color: var(--primary);
+        }
+
+        .chat-emoji-btn,
+        .chat-attach-btn {
+            width: 35px;
+            height: 35px;
+            border: none;
+            background: none;
+            color: var(--gray);
+            cursor: pointer;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .chat-emoji-btn:hover,
+        .chat-attach-btn:hover {
+            color: var(--secondary);
+        }
+
+        .chat-input {
+            flex: 1;
+            border: none;
+            background: none;
+            padding: 12px 0;
+            font-size: 0.95rem;
+            color: var(--dark);
+            outline: none;
+        }
+
+        body.dark-mode .chat-input {
+            color: white;
+        }
+
+        .chat-input::placeholder {
+            color: var(--gray);
+        }
+
+        .chat-send-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background: var(--gradient-1);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .chat-send-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(10, 61, 98, 0.3);
+        }
+
+        .chat-send-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Powered By */
+        .chat-powered {
+            padding: 10px;
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--gray);
+            background: white;
+        }
+
+        body.dark-mode .chat-powered {
+            background: var(--dark-2);
+        }
+
+        .chat-powered strong {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        body.dark-mode .chat-powered strong {
+            color: var(--secondary);
+        }
+
+        /* Destination Cards in Chat */
+        .chat-destinations {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .chat-dest-card {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            background: var(--light);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .chat-dest-card {
+            background: var(--dark);
+        }
+
+        .chat-dest-card:hover {
+            background: rgba(243, 156, 18, 0.1);
+            transform: translateX(5px);
+        }
+
+        .chat-dest-card img {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        .chat-dest-info {
+            flex: 1;
+        }
+
+        .chat-dest-info h5 {
+            font-size: 0.95rem;
+            color: var(--dark);
+            margin-bottom: 4px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body.dark-mode .chat-dest-info h5 {
+            color: white;
+        }
+
+        .chat-dest-info p {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-bottom: 4px;
+        }
+
+        .chat-dest-price {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Responsive Chat */
+        @media (max-width: 480px) {
+            .chatbot-container {
+                bottom: 15px;
+                right: 15px;
+            }
+
+            .chat-toggle {
+                width: 55px;
+                height: 55px;
+            }
+
+            .chat-window {
+                width: calc(100vw - 30px);
+                height: calc(100vh - 100px);
+                bottom: 75px;
+                right: -15px;
+                border-radius: 20px;
+            }
+
+            .chat-header {
+                padding: 15px;
+            }
+
+            .chat-avatar {
+                width: 40px;
+                height: 40px;
+            }
+
+            .chat-header-text h4 {
+                font-size: 1rem;
+            }
+
+            .chat-messages {
+                padding: 15px;
+            }
+
+            .quick-replies {
+                padding: 8px 15px 12px;
+            }
+
+            .chat-input-container {
+                padding: 12px 15px;
+            }
+        }
     </style>
 </head>
 
@@ -3077,6 +3771,91 @@
         <i class="fas fa-arrow-up"></i>
     </button>
 
+    <!-- Chatbot -->
+    <div class="chatbot-container" id="chatbot">
+        <!-- Chat Toggle Button -->
+        <button class="chat-toggle" id="chatToggle">
+            <div class="chat-toggle-icon">
+                <i class="fas fa-comments"></i>
+            </div>
+            <div class="chat-toggle-close">
+                <i class="fas fa-times"></i>
+            </div>
+            <span class="chat-notification">1</span>
+        </button>
+
+        <!-- Chat Window -->
+        <div class="chat-window" id="chatWindow">
+            <!-- Chat Header -->
+            <div class="chat-header">
+                <div class="chat-header-info">
+                    <div class="chat-avatar">
+                        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100" alt="Travel Assistant">
+                        <span class="online-status"></span>
+                    </div>
+                    <div class="chat-header-text">
+                        <h4>Luna - Travel Assistant</h4>
+                        <span class="chat-status">
+                            <i class="fas fa-circle"></i> Online | Typically replies instantly
+                        </span>
+                    </div>
+                </div>
+                <div class="chat-header-actions">
+                    <button class="chat-action-btn" id="chatMinimize" title="Minimize">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <button class="chat-action-btn" id="chatClose" title="Close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chat Messages -->
+            <div class="chat-messages" id="chatMessages">
+                <!-- Welcome Message -->
+                <div class="chat-welcome">
+                    <div class="welcome-avatar">
+                        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100" alt="Luna">
+                    </div>
+                    <h3>Hi there! 👋</h3>
+                    <p>I'm Luna, your personal travel assistant. How can I help you plan your next adventure today?</p>
+                </div>
+
+                <!-- Messages will be appended here -->
+            </div>
+
+            <!-- Quick Replies -->
+            <div class="quick-replies" id="quickReplies">
+                <button class="quick-reply-btn" data-message="Popular destinations">🌍 Popular destinations</button>
+                <button class="quick-reply-btn" data-message="Best travel deals">💰 Best deals</button>
+                <button class="quick-reply-btn" data-message="Book a trip">✈️ Book a trip</button>
+                <button class="quick-reply-btn" data-message="Talk to human">👤 Talk to human</button>
+            </div>
+
+            <!-- Chat Input -->
+            <div class="chat-input-container">
+                <div class="chat-input-wrapper">
+                    <button class="chat-emoji-btn" id="emojiBtn" title="Add emoji">
+                        <i class="far fa-smile"></i>
+                    </button>
+                    <input type="text" class="chat-input" id="chatInput" placeholder="Type your message..." autocomplete="off">
+                    <button class="chat-attach-btn" title="Attach file">
+                        <i class="fas fa-paperclip"></i>
+                    </button>
+                </div>
+                <button class="chat-send-btn" id="chatSend">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+
+            <!-- Powered By -->
+            <div class="chat-powered">
+                <span>Powered by</span>
+                <strong>WanderWorld AI</strong>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Custom Cursor
         const cursor = document.querySelector('.cursor');
@@ -3425,7 +4204,295 @@
                 mobileMenu.classList.remove('active');
                 overlay.classList.remove('active');
                 document.body.style.overflow = '';
+                // Close chatbot
+                chatWindow.classList.remove('active');
+                chatToggle.classList.remove('active');
             }
+        });
+
+        // ========== CHATBOT FUNCTIONALITY ==========
+        const chatToggle = document.getElementById('chatToggle');
+        const chatWindow = document.getElementById('chatWindow');
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const chatSend = document.getElementById('chatSend');
+        const chatClose = document.getElementById('chatClose');
+        const chatMinimize = document.getElementById('chatMinimize');
+        const quickReplies = document.querySelectorAll('.quick-reply-btn');
+        const chatNotification = document.querySelector('.chat-notification');
+
+        // Bot responses database
+        const botResponses = {
+            greetings: [
+                "Hello! 👋 Welcome to WanderWorld! How can I help you plan your dream vacation today?",
+                "Hi there! 🌍 I'm Luna, your travel assistant. Ready to explore the world together?",
+                "Hey! ✨ Great to see you! What kind of adventure are you looking for?"
+            ],
+            destinations: {
+                message: "Here are our most popular destinations right now! 🌟",
+                cards: [
+                    { name: "Paris, France", desc: "City of Love & Lights", price: "$1,299", img: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=200" },
+                    { name: "Bali, Indonesia", desc: "Tropical Paradise", price: "$899", img: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=200" },
+                    { name: "New York, USA", desc: "The City That Never Sleeps", price: "$1,499", img: "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=200" }
+                ]
+            },
+            deals: "🔥 Great news! We have some amazing deals right now:\n\n• **Paris Romantic Getaway** - 20% OFF\n• **Bali Beach Paradise** - Free spa package\n• **NYC Adventure** - Kids stay free!\n\nWould you like me to tell you more about any of these?",
+            booking: "I'd love to help you book a trip! 📝\n\nTo get started, I'll need a few details:\n1. Where would you like to go?\n2. Travel dates\n3. Number of travelers\n\nOr you can click the **Book Now** button above for our full booking form!",
+            human: "Of course! 👤 I'll connect you with one of our travel experts.\n\n📞 Call us: +1 (555) 123-4567\n📧 Email: support@wanderworld.com\n💬 Live chat: Available Mon-Fri 9AM-6PM EST\n\nIs there anything else I can help you with in the meantime?",
+            pricing: "Our trip packages typically range from $500 to $5,000+ per person, depending on:\n\n✈️ Destination\n🏨 Hotel category (3-5 stars)\n📅 Duration\n🍽️ Meal inclusions\n\nWould you like a personalized quote?",
+            safety: "Your safety is our top priority! 🛡️\n\n• 24/7 emergency support\n• Comprehensive travel insurance options\n• Vetted hotels and local partners\n• Real-time travel advisories\n• COVID-19 protocols in place\n\nTravel worry-free with WanderWorld!",
+            family: "Family trips are our specialty! 👨‍👩‍👧‍👦\n\nWe offer:\n• Kid-friendly destinations\n• Family suite accommodations\n• Age-appropriate activities\n• Flexible itineraries\n• Special kids' meals\n\nPopular family destinations: Orlando, Cancun, Costa Rica!",
+            honeymoon: "Congratulations! 💕 Let us make your honeymoon unforgettable!\n\nRomantic destinations we recommend:\n🌹 Paris, France\n🏝️ Maldives\n🌅 Santorini, Greece\n🌺 Bora Bora\n\nAll honeymoon packages include special romantic touches!",
+            default: [
+                "That's a great question! Let me help you with that. 🤔 Could you tell me more about what you're looking for?",
+                "I'd be happy to assist! For the best help, could you specify if you're interested in destinations, pricing, or booking?",
+                "Thanks for reaching out! 😊 I can help with destinations, deals, bookings, and more. What interests you most?"
+            ]
+        };
+
+        // Get current time for messages
+        const getTime = () => {
+            return new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+        };
+
+        // Create message element
+        const createMessage = (content, isUser = false, isHTML = false) => {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+            
+            const avatar = isUser 
+                ? '<div class="message-avatar"><img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100" alt="You"></div>'
+                : '<div class="message-avatar"><img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100" alt="Luna"></div>';
+            
+            messageDiv.innerHTML = `
+                ${avatar}
+                <div class="message-content">
+                    <div class="message-bubble">${isHTML ? content : escapeHtml(content).replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</div>
+                    <span class="message-time">${getTime()}</span>
+                </div>
+            `;
+            
+            return messageDiv;
+        };
+
+        // Escape HTML to prevent XSS
+        const escapeHtml = (text) => {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        };
+
+        // Create destination cards
+        const createDestinationCards = (destinations) => {
+            let html = '<div class="chat-destinations">';
+            destinations.forEach(dest => {
+                html += `
+                    <div class="chat-dest-card" onclick="window.location.href='#destinations'">
+                        <img src="${dest.img}" alt="${dest.name}">
+                        <div class="chat-dest-info">
+                            <h5>${dest.name}</h5>
+                            <p>${dest.desc}</p>
+                            <span class="chat-dest-price">From ${dest.price}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            return html;
+        };
+
+        // Show typing indicator
+        const showTyping = () => {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'typing-indicator';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerHTML = `
+                <div class="message-avatar"><img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100" alt="Luna"></div>
+                <div class="typing-bubble">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            `;
+            chatMessages.appendChild(typingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        };
+
+        // Remove typing indicator
+        const removeTyping = () => {
+            const typing = document.getElementById('typingIndicator');
+            if (typing) typing.remove();
+        };
+
+        // Get bot response based on user input
+        const getBotResponse = (userMessage) => {
+            const msg = userMessage.toLowerCase();
+            
+            // Check for greetings
+            if (msg.match(/^(hi|hello|hey|good morning|good afternoon|good evening|howdy)/i)) {
+                return { text: botResponses.greetings[Math.floor(Math.random() * botResponses.greetings.length)] };
+            }
+            
+            // Check for destinations
+            if (msg.match(/destination|popular|where|places|travel to|visit|explore|trip ideas/i)) {
+                return { 
+                    text: botResponses.destinations.message, 
+                    cards: botResponses.destinations.cards 
+                };
+            }
+            
+            // Check for deals/offers
+            if (msg.match(/deal|offer|discount|sale|cheap|budget|save|promotion|best price/i)) {
+                return { text: botResponses.deals };
+            }
+            
+            // Check for booking
+            if (msg.match(/book|reserve|booking|reservation|plan|schedule|arrange/i)) {
+                return { text: botResponses.booking };
+            }
+            
+            // Check for human support
+            if (msg.match(/human|agent|person|support|help|speak|talk|call|representative|real person/i)) {
+                return { text: botResponses.human };
+            }
+            
+            // Check for pricing
+            if (msg.match(/price|cost|how much|expensive|affordable|rate|fee|charge/i)) {
+                return { text: botResponses.pricing };
+            }
+            
+            // Check for safety
+            if (msg.match(/safe|safety|secure|security|insurance|covid|pandemic|worry/i)) {
+                return { text: botResponses.safety };
+            }
+            
+            // Check for family trips
+            if (msg.match(/family|kids|children|child|family-friendly|vacation with kids/i)) {
+                return { text: botResponses.family };
+            }
+            
+            // Check for honeymoon/romantic
+            if (msg.match(/honeymoon|romantic|couple|anniversary|wedding|romance/i)) {
+                return { text: botResponses.honeymoon };
+            }
+
+            // Check for specific destinations
+            if (msg.match(/paris|france|eiffel/i)) {
+                return { text: "Paris is absolutely magical! 🗼\n\nOur Paris package includes:\n• 5 nights at a 4-star hotel\n• Eiffel Tower skip-the-line tickets\n• Seine River cruise\n• Louvre Museum tour\n• Daily breakfast\n\n**Starting from $1,299/person**\n\nWould you like to book this trip?" };
+            }
+
+            if (msg.match(/bali|indonesia/i)) {
+                return { text: "Bali is a tropical paradise! 🌴\n\nOur Bali package includes:\n• 7 nights luxury villa with pool\n• Temple tours\n• Rice terrace visit\n• Spa treatments\n• Surfing lessons\n\n**Starting from $899/person**\n\nShall I check availability for you?" };
+            }
+
+            if (msg.match(/new york|nyc|america|usa|manhattan/i)) {
+                return { text: "New York City awaits! 🗽\n\nOur NYC package includes:\n• 4 nights in Times Square hotel\n• Broadway show tickets\n• Statue of Liberty tour\n• Central Park bike rental\n• Top of the Rock access\n\n**Starting from $1,499/person**\n\nWant me to create a custom itinerary?" };
+            }
+
+            // Check for thanks
+            if (msg.match(/thank|thanks|appreciate|grateful/i)) {
+                return { text: "You're very welcome! 😊 It's my pleasure to help. Is there anything else you'd like to know about your travel plans?" };
+            }
+
+            // Check for goodbye
+            if (msg.match(/bye|goodbye|see you|later|quit|exit/i)) {
+                return { text: "Goodbye! 👋 Have a wonderful day, and happy travels! Feel free to come back anytime you need help planning your next adventure. 🌍✈️" };
+            }
+            
+            // Default response
+            return { text: botResponses.default[Math.floor(Math.random() * botResponses.default.length)] };
+        };
+
+        // Send message function
+        const sendMessage = (message) => {
+            if (!message.trim()) return;
+            
+            // Hide welcome message after first interaction
+            const welcome = chatMessages.querySelector('.chat-welcome');
+            if (welcome) welcome.style.display = 'none';
+            
+            // Add user message
+            chatMessages.appendChild(createMessage(message, true));
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // Clear input
+            chatInput.value = '';
+            
+            // Show typing indicator
+            setTimeout(showTyping, 300);
+            
+            // Get and display bot response
+            setTimeout(() => {
+                removeTyping();
+                const response = getBotResponse(message);
+                
+                // Add text response
+                if (response.cards) {
+                    const msgContent = response.text + createDestinationCards(response.cards);
+                    chatMessages.appendChild(createMessage(msgContent, false, true));
+                } else {
+                    chatMessages.appendChild(createMessage(response.text));
+                }
+                
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 1000 + Math.random() * 1000);
+        };
+
+        // Toggle chat window
+        chatToggle.addEventListener('click', () => {
+            chatToggle.classList.toggle('active');
+            chatWindow.classList.toggle('active');
+            chatNotification.classList.add('hidden');
+            
+            if (chatWindow.classList.contains('active')) {
+                setTimeout(() => chatInput.focus(), 300);
+            }
+        });
+
+        // Close chat
+        chatClose.addEventListener('click', () => {
+            chatWindow.classList.remove('active');
+            chatToggle.classList.remove('active');
+        });
+
+        // Minimize chat
+        chatMinimize.addEventListener('click', () => {
+            chatWindow.classList.remove('active');
+            chatToggle.classList.remove('active');
+        });
+
+        // Send message on button click
+        chatSend.addEventListener('click', () => {
+            sendMessage(chatInput.value);
+        });
+
+        // Send message on Enter key
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage(chatInput.value);
+            }
+        });
+
+        // Quick replies
+        quickReplies.forEach(btn => {
+            btn.addEventListener('click', () => {
+                sendMessage(btn.dataset.message);
+            });
+        });
+
+        // Auto-open chat after delay (optional welcome message)
+        setTimeout(() => {
+            if (!chatWindow.classList.contains('active')) {
+                chatNotification.classList.remove('hidden');
+            }
+        }, 5000);
+
+        // Add hover effect to chat toggle
+        chatToggle.addEventListener('mouseenter', () => {
+            cursor.classList.add('hover');
+        });
+        chatToggle.addEventListener('mouseleave', () => {
+            cursor.classList.remove('hover');
         });
     </script>
 </body>
